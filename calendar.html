@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calendar</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#calendar {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+header {
+  background-color: #f2f2f2;
+  padding: 10px;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="calendar"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const calendarContainer = document.getElementById("calendar");
+  
+  // Get the current date
+  const currentDate = new Date();
+  let currentMonth = currentDate.getMonth();
+  let currentYear = currentDate.getFullYear();
+  
+  // Function to generate the calendar
+  function generateCalendar() {
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    
+    let calendarHTML = `
+      <header>
+        <button onclick="prevMonth()">❮</button>
+        <h2>${getMonthName(currentMonth)} ${currentYear}</h2>
+        <button onclick="nextMonth()">❯</button>
+      </header>
+      <table>
+        <tr>
+          <th > Sun </th>
+          <th> Mon </th>
+          <th > Tue </th>
+          <th > Wed </th>
+          <th > Fri </th>
+          <th > Sat </th>
+        </tr>
+    `;
+    
+    let dayCounter = 1;
+    for (let i = 0; i < 6; i++) {
+      calendarHTML += "<tr>";
+      for (let j = 0; j < 7; j++) {
+        if (i === 0 && j < firstDayOfMonth) {
+          calendarHTML += "<td></td>";
+        } else if (dayCounter > daysInMonth) {
+          break;
+        } else {
+          calendarHTML += `<td>${dayCounter}</td>`;
+          dayCounter++;
+        }
+      }
+      calendarHTML += "</tr>";
+    }
+    
+    calendarHTML += "</table>";
+    
+    calendarContainer.innerHTML = calendarHTML;
+  }
+  
+  // Function to get the name of the month
+  function getMonthName(monthIndex) {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months[monthIndex];
+  }
+  
+  // Function to go to the previous month
+  window.prevMonth = function() {
+    if (currentMonth === 0) {
+      currentMonth = 11;
+      currentYear--;
+    } else {
+      currentMonth--;
+    }
+    generateCalendar();
+  };
+  
+  // Function to go to the next month
+  window.nextMonth = function() {
+    if (currentMonth === 11) {
+      currentMonth = 0;
+      currentYear++;
+    } else {
+      currentMonth++;
+    }
+    generateCalendar();
+  };
+  
+  // Initial calendar generation
+  generateCalendar();
+});
+
+</script>
+</body>
+</html>
